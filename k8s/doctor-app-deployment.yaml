@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learning-app
+  labels:
+    app: learning-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: learning-app
+  template:
+    metadata:
+      labels:
+        app: learning-app
+    spec:
+      containers:
+        - name: learning-app
+          image: shandeep04/docker_jenkins_task2:latest
+          ports:
+            - containerPort: 4000
+          env:
+            - name: MONGO_URI
+              value: "mongodb+srv://shandeep4621:shandeep4621@cluster0.dpijowj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
