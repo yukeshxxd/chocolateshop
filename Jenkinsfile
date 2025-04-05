@@ -8,8 +8,10 @@ pipeline {
         PROMETHEUS_DEPLOYMENT = "k8s/prometheus-deployment.yaml"
         PROMETHEUS_CONFIG = "k8s/prometheus-configmap.yaml"
         GRAFANA_DEPLOYMENT = "k8s/grafana-deployment.yaml"
-        KUBECONFIG_PATH = "/var/lib/jenkins/.kube/config"
-        MINIKUBE_HOME_PATH = "/var/lib/jenkins/.minikube"
+
+        // 🛠️ Updated paths for macOS
+        KUBECONFIG_PATH = "/Users/adithyan/.kube/config"
+        MINIKUBE_HOME_PATH = "/Users/adithyan/.minikube"
     }
 
     stages {
@@ -69,19 +71,11 @@ pipeline {
                     export MINIKUBE_HOME=${MINIKUBE_HOME_PATH}
                     export KUBECONFIG=${KUBECONFIG_PATH}
 
-                    echo "🔧 Fixing Minikube Directory Permissions..."
-                    sudo chown -R jenkins:jenkins \${MINIKUBE_HOME} || true
-                    sudo chmod -R 777 \${MINIKUBE_HOME} || true
-
-                    echo "🧹 Cleaning old Minikube setup..."
+                    echo "🧹 Cleaning old Minikube setup (if any)..."
                     minikube delete || true
 
                     echo "🔄 Starting Minikube with Docker driver..."
                     minikube start --driver=docker --force
-
-                    echo "🔧 Fixing Kubeconfig Permissions..."
-                    sudo chown -R jenkins:jenkins /var/lib/jenkins/.kube
-                    sudo chmod -R 777 /var/lib/jenkins/.kube
 
                     echo "📦 Deploying Application to Kubernetes..."
                     kubectl apply -f ${K8S_DEPLOYMENT}
